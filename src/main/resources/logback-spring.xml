@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>log/log.tax-calc.log</file>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>
+                log/log-tax-calc_%i.log
+            </fileNamePattern>
+            <!--<maxFileSize>10MB</maxFileSize>-->
+            <!--<maxHistory>10</maxHistory>-->
+            <!--<totalSizeCap>100MB</totalSizeCap>-->
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+
+    </appender>
+
+
+    <springProfile name="dev">
+        <root level="info">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="SAVE-TO-FILE"/>
+        </root>
+        <logger name="taxcalc.services.LoggingService" additivity="false" level="debug">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="SAVE-TO-FILE"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="SAVE-TO-FILE"/>
+        </root>
+        <logger name="taxcalc.services.LoggingService" additivity="false" level="error">
+            <appender-ref ref="SAVE-TO-FILE"/>
+        </logger>
+    </springProfile>
+
+</configuration>

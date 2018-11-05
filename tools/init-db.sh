@@ -1,0 +1,1 @@
+mongoimport --host localhost --db tax-calc --collection taxCategory --drop --file ../database/taxCategory.json
